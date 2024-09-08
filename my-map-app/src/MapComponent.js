@@ -1,21 +1,48 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {MapContainer, TileLayer, Marker, Popup, Polyline} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import data from './turkiye.json'; // JSON dosyasını import et
-import Delaunator from 'delaunator'; // Default import
+import Delaunator from 'delaunator';
+import axios from "axios"; // Default import
 
 const MapComponent = () => {
+
+    const [cities, setCities] = useState([
+        {
+            "plaka": 0,
+            "il_adi": "test",
+            "lat": 39,
+            "lon": 32
+        }
+    ]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+
+    useEffect(() => {
+        // REST API çağrısını gerçekleştirme
+        axios.get('http://127.0.0.1:5000/api/harita')
+            .then(response => {
+                setCities(response.data);
+                setLoading(false);
+            })
+            .catch(error => {
+                setError(error);
+                setLoading(false);
+            });
+    }, []);
+
+
     const position = [39.0, 35.0]; // turkiye'nin merkezi koordinatları
     const zoomLevel = 6; // turkiye'nin tamamını göstermek için uygun bir zoom seviyesi
 
-    const cities = data; //read usa.json
-
+    /*
     const ankaraCoords = cities.find(city => city.plaka === 6);
     const istanbulCoords = cities.find(city => city.plaka === 34);
     const lineAnkIst = [
             [ankaraCoords.lat, ankaraCoords.lon],
             [istanbulCoords.lat, istanbulCoords.lon]
     ];
+    */
 
     const coordinates = cities.map(city =>
         [city.lat, city.lon]
@@ -47,7 +74,6 @@ const MapComponent = () => {
                     </Popup>
                 </Marker>
             ))}
-            <Polyline positions={lineAnkIst} color="red" weight={3} />
 
             {lines.map((line, index) => (
                 <Polyline key={index} positions={line} color="blue" weight={2} />
