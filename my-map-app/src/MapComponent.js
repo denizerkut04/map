@@ -17,6 +17,21 @@ const MapComponent = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const [city1, setCity1] = useState('');
+    const [city2, setCity2] = useState('');
+    const [drawLine, setDrawLine] = useState(false); // Butona tıklanınca çizgi çizilecek
+
+    const handleDrawLine = () => {
+        if (city1 && city2) {
+            if (city1 === city2){
+                alert('Şehirler farklı olmalı');
+            } else {
+                alert('Dijkstra gelecek bilgi');
+            }
+        } else {
+            alert('Lütfen her iki şehir için de bir seçim yapınız.');
+        }
+    };
 
     useEffect(() => {
         // REST API çağrısını gerçekleştirme
@@ -60,26 +75,53 @@ const MapComponent = () => {
     }
 
     return (
-        <MapContainer center={position} zoom={zoomLevel} style={{ height: "100vh", width: "100%" }}>
-            <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            />
+        <div>
+
+            <div style={{marginBottom: '10px'}}>
+                <label>
+                    Şehir 1:
+                    <select value={city1} onChange={(e) => setCity1(e.target.value)}>
+                        <option value="">Seçiniz</option>
+                        {cities.map((city, index) => (
+                            <option key={index} value={city.plaka}>{city.plaka} {city.il_adi}</option>
+                        ))}
+                    </select>
+                </label>
+
+                <label>
+                    Şehir 2:
+                    <select value={city2} onChange={(e) => setCity2(e.target.value)}>
+                        <option value="">Seçiniz</option>
+                        {cities.map((city, index) => (
+                            <option key={index} value={city.plaka}>{city.plaka} {city.il_adi}</option>
+                        ))}
+                    </select>
+                </label>
+
+                <button onClick={handleDrawLine}>Çizgi Çiz</button>
+            </div>
+
+            <MapContainer center={position} zoom={zoomLevel} style={{height: "100vh", width: "100%"}}>
+                <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                />
 
 
-            {cities.map((city, index) => (
-                <Marker key={index} position={[city.lat, city.lon]}>
-                    <Popup>
-                        {city.plaka} {city.il_adi}
-                    </Popup>
-                </Marker>
-            ))}
+                {cities.map((city, index) => (
+                    <Marker key={index} position={[city.lat, city.lon]}>
+                        <Popup>
+                            {city.plaka} {city.il_adi}
+                        </Popup>
+                    </Marker>
+                ))}
 
-            {lines.map((line, index) => (
-                <Polyline key={index} positions={line} color="blue" weight={2} />
-            ))}
+                {lines.map((line, index) => (
+                    <Polyline key={index} positions={line} color="blue" weight={2}/>
+                ))}
 
-        </MapContainer>
+            </MapContainer>
+        </div>
     );
 };
 
