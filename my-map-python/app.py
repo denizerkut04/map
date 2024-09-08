@@ -1,5 +1,4 @@
-from servis import app
+from uvicorn import run
 
-######
-if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+if __name__ == "__main__":
+    run("fast:app", host="0.0.0.0", port=5000, reload=True)
