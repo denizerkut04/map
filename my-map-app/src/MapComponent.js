@@ -1,38 +1,13 @@
 import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import usadata from './usa.json'; // JSON dosyasını import et
+import data from './turkiye.json'; // JSON dosyasını import et
 
 const MapComponent = () => {
-    const position = [37.0902, -95.7129]; // ABD'nin merkezi koordinatları
-    const zoomLevel = 4; // ABD'nin tamamını göstermek için uygun bir zoom seviyesi
+    const position = [39.0, 35.0]; // turkiye'nin merkezi koordinatları
+    const zoomLevel = 6; // turkiye'nin tamamını göstermek için uygun bir zoom seviyesi
 
-    const cities = usadata; //read usa.json
-
-
-    const cities1 =
-    [
-        {
-            "name": "New York",
-            "coordinates": [40.7128, -74.0060]
-        },
-        {
-            "name": "Los Angeles",
-            "coordinates": [34.0522, -118.2437]
-        },
-        {
-            "name": "Chicago",
-            "coordinates": [41.8781, -87.6298]
-        },
-        {
-            "name": "Houston",
-            "coordinates": [29.7604, -95.3698]
-        },
-        {
-            "name": "Miami",
-            "coordinates": [25.7617, -80.1918]
-        }
-    ]
+    const cities = data; //read usa.json
 
     return (
         <MapContainer center={position} zoom={zoomLevel} style={{ height: "100vh", width: "100%" }}>
@@ -43,9 +18,9 @@ const MapComponent = () => {
 
 
             {cities.map((city, index) => (
-                <Marker key={index} position={[city.latitude, city.longitude]}>
+                <Marker key={index} position={[city.lat, city.lon]}>
                     <Popup>
-                        {city.state} {city.location}
+                        {city.plaka} {city.il_adi}
                     </Popup>
                 </Marker>
             ))}
