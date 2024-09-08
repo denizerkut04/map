@@ -1,4 +1,7 @@
 from flask import Flask
+
+from turkiye import data_turkiye
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -11,8 +14,6 @@ def hello_world():  # put application's code here
 
 @app.route('/harita/')
 def hello_harita():  # put application's code here
-    map = dict()
-    map["name"] = "deniz"
-    map["surname"] = "yılmaz"
-    return map
+    return data_turkiye
+
 
