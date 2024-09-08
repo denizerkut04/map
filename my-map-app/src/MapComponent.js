@@ -20,7 +20,7 @@ const MapComponent = () => {
 
     useEffect(() => {
         // REST API çağrısını gerçekleştirme
-        axios.get('http://127.0.0.1:5000/api/harita')
+        axios.get('http://127.0.0.1:5001/api/harita')
             .then(response => {
                 setCities(response.data);
                 setLoading(false);
