@@ -1,8 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import {MapContainer, TileLayer, Marker, Popup, Polyline} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
 import Delaunator from 'delaunator';
 import axios from "axios"; // Default import
+
+const customIcon = new L.Icon({
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png', // İkon için istediğiniz URL'yi kullanabilirsiniz
+    iconSize: [40, 40], // İkonun boyutunu ayarlayabilirsiniz
+    iconAnchor: [20, 40], // İkonun harita üzerindeki pozisyonu
+    popupAnchor: [0, -40] // Popup'ın ikon üzerinde nereye yerleşeceği
+});
 
 const MapComponent = () => {
 
@@ -187,7 +195,19 @@ const MapComponent = () => {
                 {shortestPath.length > 0 && (
                     <Polyline positions={shortestPath} color="red" weight={3}/>
                 )}
-
+                {cities.map((city, index) => (
+                    <Marker
+                        key={index}
+                        position={[city.lat, city.lon]}
+                        icon={customIcon} // Özel ikonu kullanıyoruz
+                    >
+                        <Popup>
+                            {/* Şehir isimlerini istediğiniz gibi değiştirebilirsiniz */}
+                            <b>{city.il_adi}</b><br />
+                            Plaka Kodu: {city.plaka}
+                        </Popup>
+                    </Marker>
+                ))}
             </MapContainer>
         </div>
     );
