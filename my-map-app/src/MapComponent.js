@@ -7,7 +7,7 @@ import axios from "axios"; // Default import
 
 const customIcon = new L.Icon({
     iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png', // İkon için istediğiniz URL'yi kullanabilirsiniz
-    iconSize: [40, 40], // İkonun boyutunu ayarlayabilirsiniz
+    iconSize: [30, 30], // İkonun boyutunu ayarlayabilirsiniz
     iconAnchor: [20, 40], // İkonun harita üzerindeki pozisyonu
     popupAnchor: [0, -40] // Popup'ın ikon üzerinde nereye yerleşeceği
 });
@@ -173,41 +173,30 @@ const MapComponent = () => {
 
                 <button onClick={handleDrawLine}>Çizgi Çiz</button>
             </div>
-
-            <MapContainer center={position} zoom={zoomLevel} style={{height: "100vh", width: "100%"}}>
+            <MapContainer center={position} zoom={zoomLevel} style={{ height: "100vh", width: "100%" }}>
                 <TileLayer
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 />
 
-
+                {/* Şehir Marker'ları */}
                 {cities.map((city, index) => (
-                    <Marker key={index} position={[city.lat, city.lon]}>
+                    <Marker key={index} position={[city.lat, city.lon]} icon={customIcon}>
                         <Popup>
                             {city.plaka} {city.il_adi}
                         </Popup>
                     </Marker>
                 ))}
 
+                {/* Çizgiler */}
                 {lines.map((line, index) => (
-                    <Polyline key={index} positions={line} color="blue" weight={2}/>
+                    <Polyline key={index} positions={line} color="blue" weight={2} />
                 ))}
+
+                {/* En kısa yol çizgisi */}
                 {shortestPath.length > 0 && (
-                    <Polyline positions={shortestPath} color="red" weight={3}/>
+                    <Polyline positions={shortestPath} color="red" weight={3} />
                 )}
-                {cities.map((city, index) => (
-                    <Marker
-                        key={index}
-                        position={[city.lat, city.lon]}
-                        icon={customIcon} // Özel ikonu kullanıyoruz
-                    >
-                        <Popup>
-                            {/* Şehir isimlerini istediğiniz gibi değiştirebilirsiniz */}
-                            <b>{city.il_adi}</b><br />
-                            Plaka Kodu: {city.plaka}
-                        </Popup>
-                    </Marker>
-                ))}
             </MapContainer>
         </div>
     );
