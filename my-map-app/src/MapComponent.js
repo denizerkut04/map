@@ -40,7 +40,7 @@ const MapComponent = () => {
                 alert('Şehirler farklı olmalı!');
             } else {
                 // Eğer şehirler farklıysa, en kısa yolu bul.
-                const shortest = findShortestPath(parseInt(city1), parseInt(city2));
+                const shortest = findShortestPath(parseInt(city1)-1, parseInt(city2)-1);
                 if (shortest) {
                     setShortestPath(shortest);
                 } else {
