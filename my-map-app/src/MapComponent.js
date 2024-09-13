@@ -67,6 +67,34 @@ const MapComponent = () => {
     const position = [39.0, 35.0]; // turkiye'nin merkezi koordinatları
     const zoomLevel = 6; // turkiye'nin tamamını göstermek için uygun bir zoom seviyesi
 
+    const omittedPaths = [
+        ['KIRKLARELİ', 'SİNOP'],
+        ['KIRKLARELİ', 'BARTIN'],
+        ['KIRKLARELİ', 'ZONGULDAK'],
+        ['ZONGULDAK', 'İSTANBUL'],
+        ['ZONGULDAK', 'KOCAELİ'],
+        ['ZONGULDAK', 'SAKARYA'],
+        ['TEKİRDAĞ', 'BALIKESİR'],
+        ['TEKİRDAĞ', 'BURSA'],
+        ['İSTANBUL', 'BURSA'],
+        ['ÇANAKKALE', 'İZMİR'],
+        ['ANTALYA', 'HATAY'],
+        ['MERSİN', 'HATAY'],
+        ['ADANA', 'HATAY'],
+        ['HATAY', 'HAKKARİ'],
+        ['MARDİN', 'HAKKARİ'],
+        ['MARDİN', 'HATAY'],
+        ['HATAY', 'KİLİS'],
+        ['IĞDIR', 'ARDAHAN'],
+        ['AĞRI', 'VAN'],
+        ['ARDAHAN', 'SİNOP'],
+        ['ARTVİN', 'SİNOP'],
+        ['ARTVİN', 'TRABZON'],
+        ['TRABZON', 'ORDU'],
+        ['ORDU', 'SİNOP'],
+        ['SİNOP', 'TRABZON']
+    ];
+
     /*
     const ankaraCoords = cities.find(city => city.plaka === 6);
     const istanbulCoords = cities.find(city => city.plaka === 34);
@@ -92,13 +120,25 @@ const MapComponent = () => {
     }
 
     // Grafik oluşturmak için bir adjacency list yapısı
-        const graph = {};
-        for (let i = 0; i < triangles.length; i += 3) {
-            const [a, b, c] = [triangles[i], triangles[i + 1], triangles[i + 2]];
-            addEdge(graph, a, b);
-            addEdge(graph, b, c);
-            addEdge(graph, c, a);
+    const graph = {};
+    for (let i = 0; i < triangles.length; i += 3) {
+        const [a, b, c] = [triangles[i], triangles[i + 1], triangles[i + 2]];
+        const cityA = cities[a];
+        const cityB = cities[b];
+        const cityC = cities[c];
+
+        // Check if an edge between two cities should be omitted
+        function isOmittedEdge(city1, city2) {
+            return omittedPaths.some(([omitStart, omitEnd]) =>
+                (omitStart === city1.il_adi && omitEnd === city2.il_adi) ||
+                (omitStart === city2.il_adi && omitEnd === city1.il_adi)
+            );
         }
+
+        // Add edges if they are not omitted
+        if (!isOmittedEdge(cityA, cityB)) addEdge(graph, a, b);
+        if (!isOmittedEdge(cityB, cityC)) addEdge(graph, b, c);
+        if (!isOmittedEdge(cityC, cityA)) addEdge(graph, c, a);
 
         function addEdge(graph, from, to) {
             if (!graph[from]) graph[from] = [];
@@ -106,6 +146,7 @@ const MapComponent = () => {
             graph[from].push(to);
             graph[to].push(from);
         }
+    }
 
         // Dijkstra algoritmasını uygulayarak en kısa yolu bul
         const findShortestPath = (start, end) => {
